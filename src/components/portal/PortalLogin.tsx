@@ -7,15 +7,15 @@ import { Shield, Lock, User, Key } from 'lucide-react';
 import { usePortalAuth } from '@/hooks/usePortalAuth';
 
 export const PortalLogin = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [credentialCode, setCredentialCode] = useState('');
   const { authenticate, authenticating } = usePortalAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username.trim() || !credentialCode.trim()) return;
+    if (!email.trim() || !credentialCode.trim()) return;
     
-    await authenticate(username.trim(), credentialCode.trim());
+    await authenticate(email.trim(), credentialCode.trim());
   };
 
   return (
@@ -39,16 +39,16 @@ export const PortalLogin = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="username" className="flex items-center gap-2">
+                <Label htmlFor="email" className="flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  Username
+                  Email Address
                 </Label>
                 <Input
-                  id="username"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your username"
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
                   className="bg-background/50"
                   required
                 />
@@ -73,7 +73,7 @@ export const PortalLogin = () => {
               <Button 
                 type="submit" 
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                disabled={authenticating || !username.trim() || !credentialCode.trim()}
+                disabled={authenticating || !email.trim() || !credentialCode.trim()}
               >
                 {authenticating ? (
                   <div className="flex items-center gap-2">
@@ -94,9 +94,10 @@ export const PortalLogin = () => {
                 Demo Access Credentials:
               </h4>
               <div className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
-                <p><strong>Super Admin Code:</strong> PTC-ADMIN2024</p>
+                <p><strong>Email:</strong> admin@chamawallet.com</p>
+                <p><strong>Access Code:</strong> PTC-ADMIN2024</p>
                 <p className="text-xs text-blue-600 dark:text-blue-300">
-                  Valid for 7 days from system deployment
+                  Valid for 30 days from system deployment
                 </p>
               </div>
             </div>

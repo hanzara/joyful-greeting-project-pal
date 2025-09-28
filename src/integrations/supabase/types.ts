@@ -4225,6 +4225,7 @@ export type Database = {
           access_level: string
           created_at: string
           department: string | null
+          email: string | null
           id: string
           is_active: boolean
           last_login_at: string | null
@@ -4240,6 +4241,7 @@ export type Database = {
           access_level?: string
           created_at?: string
           department?: string | null
+          email?: string | null
           id?: string
           is_active?: boolean
           last_login_at?: string | null
@@ -4255,6 +4257,7 @@ export type Database = {
           access_level?: string
           created_at?: string
           department?: string | null
+          email?: string | null
           id?: string
           is_active?: boolean
           last_login_at?: string | null
@@ -6416,6 +6419,10 @@ export type Database = {
       }
       authenticate_portal_user: {
         Args: { p_credential_code: string; p_username: string }
+        Returns: Json
+      }
+      authenticate_portal_user_by_email: {
+        Args: { p_credential_code: string; p_email: string }
         Returns: Json
       }
       auto_approve_loan: {

@@ -5,6 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 interface PortalUser {
   id: string;
   username: string;
+  email?: string;
   access_level: 'admin' | 'member' | 'super_admin';
   organization?: string;
   session_token?: string;
@@ -58,11 +59,11 @@ export const usePortalAuth = () => {
     }
   };
 
-  const authenticate = async (username: string, credentialCode: string) => {
+  const authenticate = async (email: string, credentialCode: string) => {
     setAuthenticating(true);
     try {
-      const { data, error } = await supabase.rpc('authenticate_portal_user', {
-        p_username: username,
+      const { data, error } = await supabase.rpc('authenticate_portal_user_by_email', {
+        p_email: email,
         p_credential_code: credentialCode
       });
 
@@ -73,6 +74,7 @@ export const usePortalAuth = () => {
         const user: PortalUser = {
           id: result.user_id,
           username: result.username,
+          email: result.email,
           access_level: result.access_level,
           organization: result.organization,
           session_token: result.session_token
