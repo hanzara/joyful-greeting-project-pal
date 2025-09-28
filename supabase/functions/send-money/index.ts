@@ -60,29 +60,36 @@ serve(async (req) => {
       );
     }
 
-    // Find recipient by email
-    const { data: recipientAuth, error: recipientError } = await supabaseClient.auth.admin.getUserByEmail(recipientEmail);
-    
-    if (recipientError || !recipientAuth.user) {
-      // Try to find user in profiles table if auth lookup fails
-      const { data: profileUser, error: profileError } = await supabaseClient
-        .from('profiles')
-        .select('user_id')
-        .eq('email', recipientEmail)
-        .single();
+    // Find recipient by email - first try profiles table
+    const { data: profileUser, error: profileError } = await supabaseClient
+      .from('profiles')
+      .select('user_id')
+      .eq('email', recipientEmail)
+      .single();
 
-      if (profileError || !profileUser) {
-        return new Response(
-          JSON.stringify({ error: 'Recipient not found' }),
-          { 
-            status: 404, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
-        );
+    let recipientId: string | null = null;
+
+    if (profileUser) {
+      recipientId = profileUser.user_id;
+    } else {
+      // Try to find in auth.users table using listUsers
+      const { data: authUsers } = await supabaseClient.auth.admin.listUsers();
+      const matchingUser = authUsers.users?.find(user => user.email === recipientEmail);
+      
+      if (matchingUser) {
+        recipientId = matchingUser.id;
       }
     }
 
-    const recipientId = recipientAuth?.user?.id;
+    if (!recipientId) {
+      return new Response(
+        JSON.stringify({ error: 'Recipient not found' }),
+        { 
+          status: 404, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
 
     if (senderId === recipientId) {
       return new Response(

@@ -85,9 +85,10 @@ Deno.serve(async (req) => {
     const { data: userChamas } = await supabase
       .from('chama_members')
       .select(`
+        id,
         chama_id,
         role,
-        chamas (
+        chamas!inner (
           id,
           name,
           total_savings,
@@ -100,8 +101,8 @@ Deno.serve(async (req) => {
       .eq('user_id', userId)
       .eq('is_active', true);
 
-    if (userChamas) {
-      dashboardData.activeChamas = userChamas.map(member => ({
+    if (userChamas && userChamas.length > 0) {
+      dashboardData.activeChamas = userChamas.map((member: any) => ({
         id: member.chamas.id,
         name: member.chamas.name,
         total_savings: member.chamas.total_savings,
@@ -110,6 +111,7 @@ Deno.serve(async (req) => {
         contribution_amount: member.chamas.contribution_amount,
         status: member.chamas.status,
         user_role: member.role,
+        member_id: member.id,
       }));
     }
 
@@ -125,11 +127,14 @@ Deno.serve(async (req) => {
       lastMonth.setMonth(lastMonth.getMonth() - 1);
       
       // Check if user has contributed this month
+      const memberData = dashboardData.activeChamas.find((c: any) => c.id === chamaData.id);
+      if (!memberData) continue;
+
       const { data: recentContributions } = await supabase
         .from('chama_contributions_new')
         .select('contribution_date')
         .eq('chama_id', chamaData.id)
-        .eq('member_id', userChamas.find(m => m.chama_id === chamaData.id)?.id)
+        .eq('member_id', memberData.member_id)
         .gte('contribution_date', lastMonth.toISOString().split('T')[0])
         .order('contribution_date', { ascending: false })
         .limit(1);
@@ -229,7 +234,7 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Failed to fetch dashboard data',
-        details: error.message 
+        details: error instanceof Error ? error.message : 'Unknown error'
       }),
       { 
         status: 500,

@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
     console.error('Analytics tracking error:', error);
     // Return success even on error to not break user experience
     return new Response(
-      JSON.stringify({ success: true, error: error.message }),
+      JSON.stringify({ success: true, error: error instanceof Error ? error.message : 'Unknown error' }),
       { 
         status: 200,
         headers: { 
