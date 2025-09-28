@@ -17,6 +17,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
+import SubAccountManager from '@/components/SubAccountManager';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const SmartWalletPage = () => {
@@ -96,9 +97,10 @@ const SmartWalletPage = () => {
           </div>
 
           <Tabs defaultValue="dashboard" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
               <TabsTrigger value="payments">Smart Payments</TabsTrigger>
+              <TabsTrigger value="sub-accounts">Sub-Accounts</TabsTrigger>
               <TabsTrigger value="gamification">Rewards Hub</TabsTrigger>
               <TabsTrigger value="analytics">AI Analytics</TabsTrigger>
             </TabsList>
@@ -353,6 +355,10 @@ const SmartWalletPage = () => {
                   </CardContent>
                 </Card>
               </div>
+            </TabsContent>
+
+            <TabsContent value="sub-accounts">
+              <SubAccountManager />
             </TabsContent>
 
             <TabsContent value="gamification">
