@@ -4234,7 +4234,7 @@ export type Database = {
           organization: string | null
           phone_number: string | null
           updated_at: string
-          user_id: string
+          user_id: string | null
           username: string
         }
         Insert: {
@@ -4250,7 +4250,7 @@ export type Database = {
           organization?: string | null
           phone_number?: string | null
           updated_at?: string
-          user_id: string
+          user_id?: string | null
           username: string
         }
         Update: {
@@ -4266,7 +4266,7 @@ export type Database = {
           organization?: string | null
           phone_number?: string | null
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
           username?: string
         }
         Relationships: []
