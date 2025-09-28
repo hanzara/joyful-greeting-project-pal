@@ -55,7 +55,7 @@ export function HotspotManagement({ sellerId }: HotspotManagementProps) {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setHotspots(data || []);
+      setHotspots((data || []) as Hotspot[]);
     } catch (error: any) {
       console.error('Error fetching hotspots:', error);
       toast({

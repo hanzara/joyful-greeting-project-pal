@@ -76,7 +76,7 @@ export function PayoutsPanel({ sellerId }: PayoutsPanelProps) {
         .order('created_at', { ascending: false });
 
       if (payoutsError) throw payoutsError;
-      setPayouts(payoutsData || []);
+      setPayouts((payoutsData || []) as Payout[]);
     } catch (error: any) {
       console.error('Error fetching payout data:', error);
       toast({

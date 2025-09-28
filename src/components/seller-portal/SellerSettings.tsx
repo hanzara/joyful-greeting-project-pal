@@ -86,7 +86,7 @@ export function SellerSettings({ profile, onUpdate }: SellerSettingsProps) {
         description: "Your seller settings have been updated successfully",
       });
 
-      onUpdate(data);
+      onUpdate(data as SellerProfile);
     } catch (error: any) {
       console.error('Error updating settings:', error);
       toast({

@@ -108,7 +108,7 @@ export function SellerOnboarding({ existingProfile, onComplete }: SellerOnboardi
         description: "Your seller profile has been updated successfully. KYC review is in progress.",
       });
 
-      onComplete(data);
+      onComplete(data as SellerProfile);
     } catch (error: any) {
       console.error('Error updating profile:', error);
       toast({

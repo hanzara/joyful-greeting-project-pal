@@ -59,7 +59,7 @@ export function SellerPortalDashboard() {
       }
 
       if (data) {
-        setSellerProfile(data);
+        setSellerProfile(data as SellerProfile);
         if (data.kyc_status === 'approved') {
           setActiveTab('dashboard');
         }

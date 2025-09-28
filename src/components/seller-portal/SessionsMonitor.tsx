@@ -82,7 +82,7 @@ export function SessionsMonitor({ sellerId }: SessionsMonitorProps) {
         .order('started_at', { ascending: false });
 
       if (sessionsError) throw sessionsError;
-      setSessions(sessionsData || []);
+      setSessions((sessionsData || []) as Session[]);
     } catch (error: any) {
       console.error('Error fetching sessions data:', error);
       toast({
