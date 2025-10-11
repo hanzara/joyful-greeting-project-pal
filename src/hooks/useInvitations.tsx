@@ -37,7 +37,8 @@ export const useInvitations = (chamaId: string) => {
   // Create invitation mutation
   const { mutate: createInvitation, isPending: isCreating } = useMutation({
     mutationFn: async ({ email, phoneNumber, role = 'member' }: { email?: string; phoneNumber?: string; role?: string }) => {
-      const { data, error } = await supabase.rpc('create_chama_invitation', {
+      // Create the invitation in the database
+      const { data: invitationId, error } = await supabase.rpc('create_chama_invitation', {
         p_chama_id: chamaId,
         p_email: email || null,
         p_phone_number: phoneNumber || null,
@@ -45,7 +46,49 @@ export const useInvitations = (chamaId: string) => {
       });
 
       if (error) throw error;
-      return data;
+
+      // If phone number is provided, send SMS
+      if (phoneNumber) {
+        // Get chama details
+        const { data: chamaData } = await supabase
+          .from('chamas')
+          .select('name')
+          .eq('id', chamaId)
+          .single();
+
+        // Get invitation token
+        const { data: invitationData } = await supabase
+          .from('member_invitations')
+          .select('invitation_token')
+          .eq('id', invitationId)
+          .single();
+
+        // Get inviter name
+        const { data: profileData } = await supabase
+          .from('user_profiles_enhanced')
+          .select('full_name')
+          .eq('user_id', user?.id)
+          .single();
+
+        if (invitationData?.invitation_token) {
+          // Send SMS via edge function
+          const { error: smsError } = await supabase.functions.invoke('send-sms-invitation', {
+            body: {
+              phoneNumber,
+              chamaName: chamaData?.name || 'a chama',
+              invitationToken: invitationData.invitation_token,
+              inviterName: profileData?.full_name || undefined,
+            },
+          });
+
+          if (smsError) {
+            console.error('Failed to send SMS:', smsError);
+            // Don't throw error, invitation was created successfully
+          }
+        }
+      }
+
+      return invitationId;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['invitations', chamaId] });
