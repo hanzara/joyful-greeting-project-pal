@@ -643,6 +643,8 @@ export type Database = {
           payment_method: string | null
           payment_reference: string | null
           status: string | null
+          verified: boolean | null
+          verified_by: string | null
         }
         Insert: {
           amount: number
@@ -655,6 +657,8 @@ export type Database = {
           payment_method?: string | null
           payment_reference?: string | null
           status?: string | null
+          verified?: boolean | null
+          verified_by?: string | null
         }
         Update: {
           amount?: number
@@ -667,6 +671,8 @@ export type Database = {
           payment_method?: string | null
           payment_reference?: string | null
           status?: string | null
+          verified?: boolean | null
+          verified_by?: string | null
         }
         Relationships: [
           {
@@ -688,6 +694,13 @@ export type Database = {
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "chama_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chama_contributions_new_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -850,6 +863,8 @@ export type Database = {
           duration_months: number
           id: string
           interest_rate: number | null
+          metadata: Json | null
+          outstanding: number | null
           purpose: string | null
           repaid_amount: number | null
           repayment_schedule: Json | null
@@ -867,6 +882,8 @@ export type Database = {
           duration_months: number
           id?: string
           interest_rate?: number | null
+          metadata?: Json | null
+          outstanding?: number | null
           purpose?: string | null
           repaid_amount?: number | null
           repayment_schedule?: Json | null
@@ -884,6 +901,8 @@ export type Database = {
           duration_months?: number
           id?: string
           interest_rate?: number | null
+          metadata?: Json | null
+          outstanding?: number | null
           purpose?: string | null
           repaid_amount?: number | null
           repayment_schedule?: Json | null
@@ -993,6 +1012,7 @@ export type Database = {
           is_active: boolean | null
           joined_at: string | null
           last_contribution_date: string | null
+          merry_balance: number | null
           mgr_balance: number | null
           mgr_turn_date: string | null
           mgr_turn_order: number | null
@@ -1009,6 +1029,7 @@ export type Database = {
           is_active?: boolean | null
           joined_at?: string | null
           last_contribution_date?: string | null
+          merry_balance?: number | null
           mgr_balance?: number | null
           mgr_turn_date?: string | null
           mgr_turn_order?: number | null
@@ -1025,6 +1046,7 @@ export type Database = {
           is_active?: boolean | null
           joined_at?: string | null
           last_contribution_date?: string | null
+          merry_balance?: number | null
           mgr_balance?: number | null
           mgr_turn_date?: string | null
           mgr_turn_order?: number | null
@@ -1180,8 +1202,10 @@ export type Database = {
       }
       chama_notifications: {
         Row: {
+          body: string | null
           chama_id: string
           created_at: string | null
+          data: Json | null
           id: string
           is_read: boolean | null
           message: string
@@ -1191,8 +1215,10 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          body?: string | null
           chama_id: string
           created_at?: string | null
+          data?: Json | null
           id?: string
           is_read?: boolean | null
           message: string
@@ -1202,8 +1228,10 @@ export type Database = {
           user_id: string
         }
         Update: {
+          body?: string | null
           chama_id?: string
           created_at?: string | null
+          data?: Json | null
           id?: string
           is_read?: boolean | null
           message?: string
@@ -1511,6 +1539,7 @@ export type Database = {
       }
       chamas: {
         Row: {
+          admin_id: string | null
           category_id: string | null
           contribution_amount: number
           contribution_frequency: string
@@ -1525,11 +1554,14 @@ export type Database = {
           purchase_amount: number | null
           purchased_at: string | null
           purchased_by: string | null
+          schedule: Json | null
+          settings: Json | null
           status: string | null
           total_savings: number | null
           updated_at: string | null
         }
         Insert: {
+          admin_id?: string | null
           category_id?: string | null
           contribution_amount: number
           contribution_frequency?: string
@@ -1544,11 +1576,14 @@ export type Database = {
           purchase_amount?: number | null
           purchased_at?: string | null
           purchased_by?: string | null
+          schedule?: Json | null
+          settings?: Json | null
           status?: string | null
           total_savings?: number | null
           updated_at?: string | null
         }
         Update: {
+          admin_id?: string | null
           category_id?: string | null
           contribution_amount?: number
           contribution_frequency?: string
@@ -1563,11 +1598,20 @@ export type Database = {
           purchase_amount?: number | null
           purchased_at?: string | null
           purchased_by?: string | null
+          schedule?: Json | null
+          settings?: Json | null
           status?: string | null
           total_savings?: number | null
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "chamas_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "chamas_category_id_fkey"
             columns: ["category_id"]
@@ -3504,9 +3548,12 @@ export type Database = {
           id: string
           invitation_token: string
           invited_by: string
+          invited_email: string | null
+          invited_phone: string | null
           phone_number: string | null
           role: string | null
           status: string
+          token: string | null
         }
         Insert: {
           accepted_at?: string | null
@@ -3517,9 +3564,12 @@ export type Database = {
           id?: string
           invitation_token?: string
           invited_by: string
+          invited_email?: string | null
+          invited_phone?: string | null
           phone_number?: string | null
           role?: string | null
           status?: string
+          token?: string | null
         }
         Update: {
           accepted_at?: string | null
@@ -3530,9 +3580,12 @@ export type Database = {
           id?: string
           invitation_token?: string
           invited_by?: string
+          invited_email?: string | null
+          invited_phone?: string | null
           phone_number?: string | null
           role?: string | null
           status?: string
+          token?: string | null
         }
         Relationships: [
           {
@@ -5105,6 +5158,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          central_wallet_balance: number | null
           country: string | null
           created_at: string
           credit_score: number | null
@@ -5112,6 +5166,7 @@ export type Database = {
           full_name: string | null
           id: string
           loan_eligibility: number | null
+          phone: string | null
           phone_number: string | null
           preferred_language: string | null
           region: string | null
@@ -5120,6 +5175,7 @@ export type Database = {
           username: string | null
         }
         Insert: {
+          central_wallet_balance?: number | null
           country?: string | null
           created_at?: string
           credit_score?: number | null
@@ -5127,6 +5183,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           loan_eligibility?: number | null
+          phone?: string | null
           phone_number?: string | null
           preferred_language?: string | null
           region?: string | null
@@ -5135,6 +5192,7 @@ export type Database = {
           username?: string | null
         }
         Update: {
+          central_wallet_balance?: number | null
           country?: string | null
           created_at?: string
           credit_score?: number | null
@@ -5142,6 +5200,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           loan_eligibility?: number | null
+          phone?: string | null
           phone_number?: string | null
           preferred_language?: string | null
           region?: string | null
